@@ -1,3 +1,6 @@
+#ifndef PPM_H
+#define PPM_H
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -122,4 +125,7 @@ void free_pixmap_image(PPM_PIXMAP_IMAGE* image)
   free(image->pixels);
   free(image);
 }
+
+#endif
+
 #endif
