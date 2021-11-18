@@ -5,13 +5,13 @@ int main()
 {
   FILE* file = fopen("file.pbm", "wb");
 
-  PPM_WB_IMAGE* image = create_ppm_wb_image(1000, 1000);
+  PPM_PIXMAP_IMAGE* image = create_ppm_pixmap_image(100, 100);
 
-  for(int x = 100; x < 400; x++)
-    for(int y = 100; y < 400; y++)
-      set_wb_image_pixel_color(image, x, y, 1);
+  for(int x = 20; x <= 80; x++)
+    for(int y = 20; y <= 80; y++)
+      set_pixmap_image_pixel_color(image, x, y, 0, 255, 255);
 
-  write_wb_image_binary(image, file);
+  write_pixmap_image_binary(image, file);
 
   return 0;
 }

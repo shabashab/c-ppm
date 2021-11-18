@@ -113,7 +113,6 @@ PPM_PIXMAP_IMAGE* create_ppm_pixmap_image(size_t width, size_t height)
 
   return image;
 }
-
 void check_pixel_position(size_t x, size_t y, PPM_IMAGE_META *meta)
 {
   if(x > (meta->width - 1))
@@ -143,7 +142,8 @@ uint8_t get_graymap_image_pixel(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y)
 RGB_PIXEL get_pixmap_image_pixel(PPM_PIXMAP_IMAGE* image, size_t x, size_t y)
 {
   check_pixel_position(x, y, &(image->meta));
-  return *(RGB_PIXEL*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(RGB_PIXEL), x, y);
+  return image->pixels[(image->meta.width * y) + x];
+;
 }
 
 void set_wb_image_pixel_color(PPM_WB_IMAGE* image, size_t x, size_t y, bool color)
@@ -161,7 +161,7 @@ void set_graymap_image_pixel_color(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y,
 void set_pixmap_image_pixel_color(PPM_PIXMAP_IMAGE* image, size_t x, size_t y, uint8_t r, uint8_t g, uint8_t b)
 {
   check_pixel_position(x, y, &(image->meta));
-  RGB_PIXEL* pixel = (RGB_PIXEL*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(RGB_PIXEL), x, y);
+  RGB_PIXEL* pixel = &(image->pixels[(image->meta.width * y) + x]);
 
   pixel->r = r;
   pixel->g = g;
@@ -199,7 +199,9 @@ void write_pixmap_image_plain(PPM_PIXMAP_IMAGE* image, FILE* file)
   fprintf(file, "P3 %lu %lu %d\n", image->meta.width, image->meta.height, 255);
 
   for(size_t i = 0; i < image->pixels_count; i++)
+  {
     fprintf(file, "%d %d %d\n", image->pixels[i].r, image->pixels[i].g, image->pixels[i].b);
+  }
 }
 
 
@@ -221,19 +223,6 @@ void write_wb_image_binary(PPM_WB_IMAGE* image, FILE* file)
     }
     fwrite(buffer, sizeof(uint8_t), buffer_len, file);
   }
-    
-//  uint8_t buffer[1];
-//
-//  for(size_t i = 0; i < image->pixels_count; i++)
-//  {
-//    buffer[0] |= image->pixels[i] << (8 - (i % 8));
-//
-//    if(i % 8 == 0) 
-//    {
-//      fwrite(buffer, sizeof(uint8_t), 1, file);
-//      buffer[0] = 0;
-//    }
-//  }
 }
 
 void write_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, FILE* file)
