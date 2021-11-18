@@ -77,4 +77,17 @@ PPM_WB_IMAGE* create_ppm_wb_image(size_t width, size_t height)
   return image;
 }
 
+PPM_GRAYMAP_IMAGE* create_ppm_graymap_image(size_t width, size_t height)
+{
+  PPM_GRAYMAP_IMAGE* image = (PPM_GRAYMAP_IMAGE*)malloc(sizeof(PPM_GRAYMAP_IMAGE));
+  
+  image->meta.width = width;
+  image->meta.height = height;
+
+  image->pixels_count = width * height;
+  image->pixels = (uint8_t*)malloc(sizeof(uint8_t) * image->pixels_count);
+
+  return image;
+}
+
 #endif
