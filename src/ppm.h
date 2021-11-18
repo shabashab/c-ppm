@@ -90,4 +90,17 @@ PPM_GRAYMAP_IMAGE* create_ppm_graymap_image(size_t width, size_t height)
   return image;
 }
 
+PPM_PIXMAP_IMAGE* create_ppm_pixmap_image(size_t width, size_t height)
+{
+  PPM_PIXMAP_IMAGE* image = (PPM_PIXMAP_IMAGE*)malloc(sizeof(PPM_PIXMAP_IMAGE));
+  
+  image->meta.width = width;
+  image->meta.height = height;
+
+  image->pixels_count = width * height;
+  image->pixels = (RGB_PIXEL*)malloc(sizeof(RGB_PIXEL) * image->pixels_count);
+
+  return image;
+
+}
 #endif
