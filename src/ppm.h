@@ -145,6 +145,29 @@ RGB_PIXEL get_pixmap_image_pixel(PPM_PIXMAP_IMAGE* image, size_t x, size_t y)
   return *(RGB_PIXEL*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(RGB_PIXEL), x, y);
 }
 
+void set_wb_image_pixel_color(PPM_WB_IMAGE* image, size_t x, size_t y, bool color)
+{
+  check_pixel_position(x, y, &(image->meta));
+  (*(bool*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(bool), x, y)) = color;
+}
+
+void set_graymap_image_pixel_color(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y, uint8_t color)
+{
+  check_pixel_position(x, y, &(image->meta));
+  (*(uint8_t*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(uint8_t), x, y)) = color;
+}
+
+void set_pixmap_image_pixel_color(PPM_PIXMAP_IMAGE* image, size_t x, size_t y, uint8_t r, uint8_t g, uint8_t b)
+{
+  check_pixel_position(x, y, &(image->meta));
+  RGB_PIXEL* pixel = (RGB_PIXEL*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(RGB_PIXEL), x, y);
+
+  pixel->r = r;
+  pixel->g = g;
+  pixel->b = b;
+}
+
+
 void free_wb_image(PPM_WB_IMAGE* image)
 {
   free(image->pixels);
