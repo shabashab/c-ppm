@@ -168,6 +168,39 @@ void set_pixmap_image_pixel_color(PPM_PIXMAP_IMAGE* image, size_t x, size_t y, u
 }
 
 
+void write_wb_image_plain(PPM_WB_IMAGE* image, FILE* file)
+{
+  if(!file)
+    throw_fatal("File is null", 2);
+
+  fprintf(file, "P1 %lu %lu %d\n", image->meta.width, image->meta.height, 2);
+
+  for(size_t i = 0; i < image->pixels_count; i++)
+    fprintf(file, "%d\n", image->pixels[i] % 2);
+}
+
+void write_graymap_image_plain(PPM_GRAYMAP_IMAGE* image, FILE* file)
+{
+  if(!file)
+    throw_fatal("File is null", 2);
+
+  fprintf(file, "P2 %lu %lu %d\n", image->meta.width, image->meta.height, 255);
+
+  for(size_t i = 0; i < image->pixels_count; i++)
+    fprintf(file, "%d\n", image->pixels[i] % 255);
+}
+
+void write_pixmap_image_plain(PPM_PIXMAP_IMAGE* image, FILE* file)
+{
+  if(!file)
+    throw_fatal("File is null", 2);
+
+  fprintf(file, "P3 %lu %lu %d\n", image->meta.width, image->meta.height, 255);
+
+  for(size_t i = 0; i < image->pixels_count; i++)
+    fprintf(file, "%d %d %d\n", image->pixels[i].r, image->pixels[i].g, image->pixels[i].b);
+}
+
 void free_wb_image(PPM_WB_IMAGE* image)
 {
   free(image->pixels);
