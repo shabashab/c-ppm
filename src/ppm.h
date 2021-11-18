@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct {
   uint8_t r;
@@ -41,13 +42,13 @@ PPM_GRAYMAP_IMAGE* ppm_wb_to_graymap(PPM_WB_IMAGE* image);
 PPM_PIXMAP_IMAGE* ppm_wb_to_pixmap(PPM_WB_IMAGE* image);
 PPM_PIXMAP_IMAGE* ppm_graymap_to_pixmap(PPM_GRAYMAP_IMAGE* image);
 
-void save_wb_image_plain(PPM_WB_IMAGE* image, const char* filename);
-void save_graymap_image_plain(PPM_GRAYMAP_IMAGE* image, const char* filename);
-void save_pixmap_image_plain(PPM_PIXMAP_IMAGE* image, const char* filename);
+void write_wb_image_plain(PPM_WB_IMAGE* image, FILE* file);
+void write_graymap_image_plain(PPM_GRAYMAP_IMAGE* image, FILE* file);
+void write_pixmap_image_plain(PPM_PIXMAP_IMAGE* image, FILE* file);
 
-void save_wb_image_binary(PPM_WB_IMAGE* image, const char* filename);
-void save_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, const char* filename);
-void save_pixmap_image_binary(PPM_PIXMAP_IMAGE* image, const char* filename);
+void write_wb_image_binary(PPM_WB_IMAGE* image, FILE* file);
+void write_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, FILE* file);
+void write_pixmap_image_binary(PPM_PIXMAP_IMAGE* image, FILE* file);
 
 bool get_wb_image_pixel();
 uint8_t get_graymap_image_pixel();
