@@ -53,9 +53,9 @@ void write_wb_image_binary(PPM_WB_IMAGE* image, FILE* file);
 void write_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, FILE* file);
 void write_pixmap_image_binary(PPM_PIXMAP_IMAGE* image, FILE* file);
 
-bool get_wb_image_pixel();
-uint8_t get_graymap_image_pixel();
-RGB_PIXEL get_pixmap_image_pixel();
+bool get_wb_image_pixel(size_t x, size_t y);
+uint8_t get_graymap_image_pixel(size_t x, size_t y);
+RGB_PIXEL get_pixmap_image_pixel(size_t x, size_t y);
 
 void set_wb_image_pixel_color(PPM_WB_IMAGE* image, size_t x, size_t y, bool color);
 void set_graymap_image_pixel_color(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y, uint8_t color);
@@ -106,6 +106,7 @@ PPM_PIXMAP_IMAGE* create_ppm_pixmap_image(size_t width, size_t height)
 
   return image;
 }
+
 
 
 void free_wb_image(PPM_WB_IMAGE* image)
