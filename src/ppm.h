@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef struct {
   uint8_t r;
@@ -173,7 +174,7 @@ void write_wb_image_plain(PPM_WB_IMAGE* image, FILE* file)
   if(!file)
     throw_fatal("File is null", 2);
 
-  fprintf(file, "P1 %lu %lu %d\n", image->meta.width, image->meta.height, 2);
+  fprintf(file, "P1\n%lu %lu\n", image->meta.width, image->meta.height);
 
   for(size_t i = 0; i < image->pixels_count; i++)
     fprintf(file, "%d\n", image->pixels[i] % 2);
@@ -199,6 +200,77 @@ void write_pixmap_image_plain(PPM_PIXMAP_IMAGE* image, FILE* file)
 
   for(size_t i = 0; i < image->pixels_count; i++)
     fprintf(file, "%d %d %d\n", image->pixels[i].r, image->pixels[i].g, image->pixels[i].b);
+}
+
+
+void write_wb_image_binary(PPM_WB_IMAGE* image, FILE* file)
+{
+  if(!file)
+    throw_fatal("File is null", 2);
+
+  fprintf(file, "P4\n%lu %lu\n", image->meta.width, image->meta.height);
+
+  size_t buffer_len = ((image->meta.width / 8)) + (image->meta.width % 8 != 0);
+
+  for(size_t y = 0; y < image->meta.height; y++)
+  {
+    uint8_t* buffer = (uint8_t*)malloc(sizeof(uint8_t) * buffer_len);
+    for(size_t x = 0; x < image->meta.width; x++) 
+    {
+      buffer[x / 8] |= image->pixels[(y * image->meta.width) + x] << (8 - (x % 8) - 1);
+    }
+    fwrite(buffer, sizeof(uint8_t), buffer_len, file);
+  }
+    
+//  uint8_t buffer[1];
+//
+//  for(size_t i = 0; i < image->pixels_count; i++)
+//  {
+//    buffer[0] |= image->pixels[i] << (8 - (i % 8));
+//
+//    if(i % 8 == 0) 
+//    {
+//      fwrite(buffer, sizeof(uint8_t), 1, file);
+//      buffer[0] = 0;
+//    }
+//  }
+}
+
+void write_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, FILE* file)
+{
+  if(!file)
+    throw_fatal("File is null", 2);
+  
+
+  fprintf(file, "P5 %lu %lu %d\n", image->meta.width, image->meta.height, 255);
+
+  uint8_t buffer[1];
+
+  for(size_t i = 0; i < image->pixels_count; i++)
+  {
+    buffer[0] = image->pixels[i];
+    fwrite(buffer, sizeof(uint8_t), 1, file);
+  }
+}
+
+void write_pixmap_image_binary(PPM_PIXMAP_IMAGE* image, FILE* file)
+{
+  if(!file)
+    throw_fatal("File is null", 2);
+  
+
+  fprintf(file, "P6 %lu %lu %d\n", image->meta.width, image->meta.height, 255);
+
+  uint8_t buffer[3];
+
+  for(size_t i = 0; i < image->pixels_count; i++)
+  {
+    buffer[0] = image->pixels[i].r;
+    buffer[1] = image->pixels[i].g;
+    buffer[2] = image->pixels[i].b;
+
+    fwrite(buffer, sizeof(uint8_t), 3, file);
+  }
 }
 
 void free_wb_image(PPM_WB_IMAGE* image)
