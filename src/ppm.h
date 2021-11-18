@@ -1,12 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-enum PPM_IMAGE_TYPE {
-  WB = 0,
-  GRAYMAP = 1,
-  PIXMAP = 2
-};
-
 typedef struct {
   uint8_t r;
   uint8_t g;
@@ -16,7 +10,6 @@ typedef struct {
 typedef struct {
   size_t width;
   size_t height;
-  PPM_IMAGE_TYPE type;
 } PPM_IMAGE_META;
 
 typedef struct {
@@ -71,6 +64,17 @@ void free_pixmap_image(PPM_PIXMAP_IMAGE* image);
 #ifndef PPM_IMPL
 #define PPM_IMPL
 
-//Implementation goes here
+PPM_WB_IMAGE* create_ppm_wb_image(size_t width, size_t height)
+{
+  PPM_WB_IMAGE* image = (PPM_WB_IMAGE*)malloc(sizeof(PPM_WB_IMAGE));
+
+  image->meta.width = width;
+  image->meta.height = height;
+
+  image->pixels_count = width * height;
+  image->pixels = (bool*)malloc(sizeof(bool) * image->pixels_count);
+
+  return image;
+}
 
 #endif
