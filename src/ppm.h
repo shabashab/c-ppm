@@ -53,9 +53,9 @@ void write_wb_image_binary(PPM_WB_IMAGE* image, FILE* file);
 void write_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, FILE* file);
 void write_pixmap_image_binary(PPM_PIXMAP_IMAGE* image, FILE* file);
 
-bool get_wb_image_pixel(size_t x, size_t y);
-uint8_t get_graymap_image_pixel(size_t x, size_t y);
-RGB_PIXEL get_pixmap_image_pixel(size_t x, size_t y);
+bool get_wb_image_pixel(PPM_WB_IMAGE* image, size_t x, size_t y);
+uint8_t get_graymap_image_pixel(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y);
+RGB_PIXEL get_pixmap_image_pixel(PPM_PIXMAP_IMAGE* image, size_t x, size_t y);
 
 void set_wb_image_pixel_color(PPM_WB_IMAGE* image, size_t x, size_t y, bool color);
 void set_graymap_image_pixel_color(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y, uint8_t color);
@@ -67,6 +67,12 @@ void free_pixmap_image(PPM_PIXMAP_IMAGE* image);
 
 #ifndef PPM_IMPL
 #define PPM_IMPL
+
+void throw_fatal(const char* text, int status) 
+{
+  printf("FATAL: %s", text);
+  exit(status);
+}
 
 PPM_WB_IMAGE* create_ppm_wb_image(size_t width, size_t height)
 {
@@ -107,7 +113,37 @@ PPM_PIXMAP_IMAGE* create_ppm_pixmap_image(size_t width, size_t height)
   return image;
 }
 
+void check_pixel_position(size_t x, size_t y, PPM_IMAGE_META *meta)
+{
+  if(x > (meta->width - 1))
+    throw_fatal("Can't get a pixel that is outside image", 1);
+    
+  if(y > (meta->height - 1))
+    throw_fatal("Can't get a pixel that is outside image", 1);
+}
 
+uint8_t* get_pixel_by_pos(uint8_t *pixels, PPM_IMAGE_META *meta, size_t pixel_size, size_t x, size_t y)
+{ 
+  return pixels + (pixel_size + ((meta->width) * y) + x);
+}
+
+bool get_wb_image_pixel(PPM_WB_IMAGE* image, size_t x, size_t y)
+{
+  check_pixel_position(x, y, &(image->meta));
+  return *(bool*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(bool), x, y);
+}
+
+uint8_t get_graymap_image_pixel(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y)
+{
+  check_pixel_position(x, y, &(image->meta));
+  return *(uint8_t*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(uint8_t), x, y);
+}
+
+RGB_PIXEL get_pixmap_image_pixel(PPM_PIXMAP_IMAGE* image, size_t x, size_t y)
+{
+  check_pixel_position(x, y, &(image->meta));
+  return *(RGB_PIXEL*)get_pixel_by_pos((uint8_t*)image->pixels, &(image->meta), sizeof(RGB_PIXEL), x, y);
+}
 
 void free_wb_image(PPM_WB_IMAGE* image)
 {
