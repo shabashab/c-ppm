@@ -8,18 +8,10 @@ enum PPM_IMAGE_TYPE {
 };
 
 typedef struct {
-  bool value;
-} WB_PIXEL;
-
-typedef struct {
-  uint8_t value;
-} GRAYMAP_PIXEL;
-
-typedef struct {
   uint8_t r;
   uint8_t g;
   uint8_t b;
-} PIXMAP_PIXEL;
+} RGB_PIXEL;
 
 typedef struct {
   size_t width;
@@ -30,21 +22,21 @@ typedef struct {
 typedef struct {
   PPM_IMAGE_META meta;
 
-  WB_PIXEL* pixels;
+  bool* pixels;
   size_t pixels_count;
 } PPM_WB_IMAGE;
 
 typedef struct {
   PPM_IMAGE_META meta;
 
-  GRAYMAP_PIXEL* pixels;
+  uint8_t* pixels;
   size_t pixels_count;
 } PPM_GRAYMAP_IMAGE;
 
 typedef struct {
   PPM_IMAGE_META meta;
 
-  GRAYMAP_PIXEL* pixels;
+  RGB_PIXEL* pixels;
   size_t pixels_count;
 } PPM_PIXMAP_IMAGE;
 
@@ -64,9 +56,9 @@ void save_wb_image_binary(PPM_WB_IMAGE* image, const char* filename);
 void save_graymap_image_binary(PPM_GRAYMAP_IMAGE* image, const char* filename);
 void save_pixmap_image_binary(PPM_PIXMAP_IMAGE* image, const char* filename);
 
-WB_PIXEL* get_wb_image_pixel();
-GRAYMAP_PIXEL* get_graymap_image_pixel();
-PIXMAP_PIXEL* get_pixmap_image_pixel();
+bool get_wb_image_pixel();
+uint8_t get_graymap_image_pixel();
+RGB_PIXEL get_pixmap_image_pixel();
 
 void set_wb_image_pixel_color(PPM_WB_IMAGE* image, size_t x, size_t y, bool color);
 void set_graymap_image_pixel_color(PPM_GRAYMAP_IMAGE* image, size_t x, size_t y, uint8_t color);
