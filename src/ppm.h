@@ -101,6 +101,24 @@ PPM_PIXMAP_IMAGE* create_ppm_pixmap_image(size_t width, size_t height)
   image->pixels = (RGB_PIXEL*)malloc(sizeof(RGB_PIXEL) * image->pixels_count);
 
   return image;
+}
 
+
+void free_wb_image(PPM_WB_IMAGE* image)
+{
+  free(image->pixels);
+  free(image);
+}
+
+void free_graymap_image(PPM_GRAYMAP_IMAGE* image)
+{
+  free(image->pixels);
+  free(image);
+}
+
+void free_pixmap_image(PPM_PIXMAP_IMAGE* image)
+{
+  free(image->pixels);
+  free(image);
 }
 #endif
